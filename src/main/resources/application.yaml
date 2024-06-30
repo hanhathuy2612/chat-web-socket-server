@@ -1,5 +1,37 @@
 spring:
+  liquibase:
+    change-log: classpath:liquibase/master.xml
   datasource:
     url: jdbc:mysql://localhost:3306/chat_app
     username: root
     password: FormosVN@123
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    hikari:
+      pool-name: hikari-id
+      auto-commit: true
+      data-source-properties:
+        cachePrepStmts: true
+        prepStmtCacheSize: 250
+        prepStmtCacheSqlLimit: 2048
+        useServerPrepStmts: true
+      minimum-idle: 3
+      maximum-pool-size: 20
+    type: com.zaxxer.hikari.HikariDataSource
+  jpa:
+    show-sql: true
+    properties:
+      hibernate.format_sql: false
+      hibernate.dialect: org.hibernate.dialect.MySQL8Dialect
+    hibernate:
+      ddl-auto: none
+      naming:
+        implicit-strategy: org.hibernate.boot.model.naming.ImplicitNamingStrategyLegacyJpaImpl
+        physical-strategy: org.hibernate.boot.model.naming.CamelCaseToUnderscoresNamingStrategy
+        
+app:
+  security:
+    authentication:
+      jwt:
+        base64-secret: YWM2YTk3OTA2MGZmNzRhMjc0OGNhYTA5ZGJkZGIyNjU2ZTVlOTQyNWI3YTljNzlkZDM4ZjAzMWU2Yjc3ZjYwYWM3NjNmNzFkMDFjMGZhMGUxZDY2ZTQ3NTcwNzZlOGMxYzRhZDlkN2YzZjY0MDE0OGFlZWU3OGU0M2I2ZWI3NzU=
+        token-validity-in-seconds: 86400
+        token-validity-in-seconds-for-remember-me: 2592000 

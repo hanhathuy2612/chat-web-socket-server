@@ -27,7 +27,11 @@ dependencies {
      */
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
     implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation "org.springframework.boot:spring-boot-starter-validation"
     implementation 'org.springframework.boot:spring-boot-starter-websocket'
+    implementation "org.springframework.boot:spring-boot-starter-security"
+    implementation "org.springframework.security:spring-security-data"
+    implementation "org.springframework.boot:spring-boot-starter-oauth2-resource-server"
     annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     /**
@@ -40,8 +44,41 @@ dependencies {
      */
     runtimeOnly 'com.mysql:mysql-connector-j'
 
+    implementation "jakarta.annotation:jakarta.annotation-api"
+
+    // liquibase
+    implementation("org.liquibase:liquibase-core:4.25.1")
+    implementation("javax.xml.bind:jaxb-api:2.3.0")
+    implementation("org.liquibase.ext:liquibase-hibernate6:4.25.1") {
+        exclude group: "org.slf4j", module: "slf4j-api"
+        exclude group: "org.slf4j", module: "slf4j-simple"
+    }
 }
 
-tasks.named('test') {
-    useJUnitPlatform()
+project.ext.diffChangelogFile = "src/main/resources/liquibase/changelog/" + new Date().format("yyyyMMddHHmmss") + "_changelog.mysql.sql"
+tasks.register('liquibaseGenerateDiffChangelog', JavaExec) {
+    classpath = sourceSets.main.runtimeClasspath
+    main = 'liquibase.integration.commandline.Main'
+
+    args "--changeLogFile=${project.ext.diffChangelogFile}"
+    args "--url=$mysqlUrl"
+    args "--username=$mysqlUsername"
+    args "--password=$mysqlPassword"
+    args "--referenceUrl=hibernate:spring:com.example.chat_backend.domain?dialect=org.hibernate.dialect.MySQL8Dialect&hibernate.physical_naming_strategy=org.hibernate.boot.model.naming.CamelCaseToUnderscoresNamingStrategy&hibernate.implicit_naming_strategy=org.hibernate.boot.model.naming.ImplicitNamingStrategyLegacyJpaImpl"
+    args "--defaultSchemaName=$defaultSchemaName"
+    args "--classpath=${"$buildDir/classes/java/main"}"
+    args "--driver=com.mysql.cj.jdbc.Driver"
+    args "diffChangeLog"
 }
+
+tasks.register('liquibaseUpdate', JavaExec) {
+    classpath = sourceSets.main.runtimeClasspath
+    main = 'liquibase.integration.commandline.Main'
+
+    args "--changeLogFile=src/main/resources/liquibase/master.xml"
+    args "--url=$mysqlUrl"
+    args "--username=$mysqlUsername"
+    args "--password=$mysqlPassword"
+    args "update"
+}
+
