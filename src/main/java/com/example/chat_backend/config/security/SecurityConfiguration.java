@@ -2,6 +2,7 @@ package com.example.chat_backend.config.security;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
@@ -51,9 +52,10 @@ public class SecurityConfiguration {
                         .requestMatchers("/content/**").permitAll()
                         .requestMatchers("/swagger-ui/**").permitAll()
                         .requestMatchers("/api/register").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/api/authenticate").permitAll()
                         .requestMatchers("/api/admin/**").hasAuthority(AuthoritiesConstants.ADMIN)
-                        .requestMatchers("/api/**").authenticated()
                         .requestMatchers("/v3/api-docs/**").hasAuthority(AuthoritiesConstants.ADMIN)
+                        .requestMatchers("/api/**").authenticated()
             )
             .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
             .exceptionHandling(

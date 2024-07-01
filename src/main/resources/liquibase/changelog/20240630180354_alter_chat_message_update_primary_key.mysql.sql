@@ -6,8 +6,4 @@ ALTER TABLE chat_message
 
 -- changeset withu:1719744835969-6
 ALTER TABLE chat_message
-    MODIFY id BIGINT AUTO_INCREMENT NOT NULL;
-
--- changeset withu:1719744835969-7
-ALTER TABLE chat_message
-    ADD PRIMARY KEY (id);
+    MODIFY id BIGINT AUTO_INCREMENT NOT NULL PRIMARY KEY;

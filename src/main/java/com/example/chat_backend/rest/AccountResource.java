@@ -32,7 +32,7 @@ import static com.example.chat_backend.config.security.SecurityUtils.AUTHORITIES
 import static com.example.chat_backend.config.security.SecurityUtils.JWT_ALGORITHM;
 
 @Slf4j
-@RestController
+@RestController("api")
 @RequiredArgsConstructor
 public class AccountResource {
 
