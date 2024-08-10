@@ -53,6 +53,10 @@ dependencies {
         exclude group: "org.slf4j", module: "slf4j-api"
         exclude group: "org.slf4j", module: "slf4j-simple"
     }
+    
+    // mapstruct
+    implementation 'org.mapstruct:mapstruct:1.5.3.Final'
+    annotationProcessor 'org.mapstruct:mapstruct-processor:1.5.3.Final'
 }
 
 project.ext.diffChangelogFile = "src/main/resources/liquibase/changelog/" + new Date().format("yyyyMMddHHmmss") + "_changelog.mysql.sql"
