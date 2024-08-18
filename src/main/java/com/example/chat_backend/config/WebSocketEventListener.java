@@ -23,7 +23,7 @@ public class WebSocketEventListener {
         StompHeaderAccessor headerAccessor = StompHeaderAccessor.wrap(event.getMessage());
         String sessionId = headerAccessor.getSessionId();
         log.info("New WebSocket connection: {}", sessionId);
-        
+
         messagingTemplate.convertAndSend("/topic/messages", ChatMessage.builder()
             .type(MessageType.JOIN)
             .build());

@@ -5,21 +5,23 @@ import com.example.chat_backend.service.dto.ChatMessageDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.Payload;
-import org.springframework.messaging.handler.annotation.SendTo;
-import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
-
-import java.util.Objects;
 
 @Controller
 @RequiredArgsConstructor
 public class ChatController {
     private final ChatMessageService chatMessageService;
+    private final SimpMessagingTemplate messagingTemplate;
 
     @MessageMapping("/send")
-    @SendTo("/topic/messages")
     public ChatMessageDTO send(@Payload ChatMessageDTO chatMessage) {
         chatMessage = chatMessageService.create(chatMessage);
+
+        // Assuming `chatMessage` contains a `roomId` field to identify the room
+        String destination = "/topic/messages/" + chatMessage.getRoom().getId();
+        messagingTemplate.convertAndSend(destination, chatMessage);
+
         return chatMessage;
     }
 }

@@ -20,6 +20,8 @@ public class ChatMessageDTO extends AuditDTO {
     private String content;
 
     private AppUserDTO sender;
+    
+    private RoomDTO room;
 
     public ChatMessageDTO(ChatMessage chatMessage) {
         this.id = chatMessage.getId();
