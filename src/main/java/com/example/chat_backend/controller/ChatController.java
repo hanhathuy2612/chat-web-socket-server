@@ -12,15 +12,10 @@ import org.springframework.stereotype.Controller;
 @RequiredArgsConstructor
 public class ChatController {
     private final ChatMessageService chatMessageService;
-    private final SimpMessagingTemplate messagingTemplate;
 
     @MessageMapping("/send")
     public ChatMessageDTO send(@Payload ChatMessageDTO chatMessage) {
         chatMessage = chatMessageService.create(chatMessage);
-
-        // Assuming `chatMessage` contains a `roomId` field to identify the room
-        String destination = "/topic/messages/" + chatMessage.getRoom().getId();
-        messagingTemplate.convertAndSend(destination, chatMessage);
 
         return chatMessage;
     }
