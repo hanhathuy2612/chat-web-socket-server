@@ -30,6 +30,10 @@ public class ChatMessage extends AbstractAuditingEntity<Long> {
     @JoinColumn(name = "sender_id")
     private AppUser sender;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "room_id")
+    private Room room;
+
     public ChatMessage(ChatMessageDTO dto) {
         this.id = dto.getId();
         this.type = dto.getType();
