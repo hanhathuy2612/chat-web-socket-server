@@ -25,9 +25,13 @@ public class Room extends AbstractAuditingEntity<Long> {
     @Builder.Default
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
-        name = "room_app_user",
-        joinColumns = @JoinColumn(name = "room_id"),
-        inverseJoinColumns = @JoinColumn(name = "app_user_id")
+            name = "room_app_user",
+            joinColumns = @JoinColumn(name = "room_id"),
+            inverseJoinColumns = @JoinColumn(name = "app_user_id")
     )
     private Set<AppUser> appUsers = new HashSet<>();
+
+
+    @OneToMany(mappedBy = "room")
+    private Set<ChatMessage> chatMessages = new HashSet<>();
 }
