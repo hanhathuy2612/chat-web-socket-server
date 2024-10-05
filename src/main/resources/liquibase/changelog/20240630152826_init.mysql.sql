@@ -48,7 +48,7 @@ CREATE TABLE chat_message
 -- changeset withu:1719736495613-5
 CREATE TABLE room
 (
-    id                 BIGINT      NOT NULL,
+    id                 BIGINT AUTO_INCREMENT NOT NULL,
     created_by         VARCHAR(50) NOT NULL,
     created_date       datetime(6) NULL,
     last_modified_by   VARCHAR(50) NULL,

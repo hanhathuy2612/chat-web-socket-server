@@ -41,11 +41,10 @@ public class DomainUserDetailsService implements UserDetailsService {
 //                .orElseThrow(() -> new UsernameNotFoundException("User with email " + login + " was not found in the database"));
 //        }
 
-        String lowercaseLogin = login.toLowerCase(Locale.ENGLISH);
         return userRepository
-            .findOneWithAuthoritiesByLogin(lowercaseLogin)
-            .map(user -> createSpringSecurityUser(lowercaseLogin, user))
-            .orElseThrow(() -> new UsernameNotFoundException("User " + lowercaseLogin + " was not found in the database"));
+            .findOneWithAuthoritiesByLogin(login)
+            .map(user -> createSpringSecurityUser(login, user))
+            .orElseThrow(() -> new UsernameNotFoundException("User " + login + " was not found in the database"));
     }
 
     private org.springframework.security.core.userdetails.User createSpringSecurityUser(String lowercaseLogin, AppUser user) {

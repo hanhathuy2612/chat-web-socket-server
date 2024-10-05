@@ -18,6 +18,7 @@ import java.util.stream.Collectors;
 @SuperBuilder(toBuilder = true)
 public class Room extends AbstractAuditingEntity<Long> {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     private String name;

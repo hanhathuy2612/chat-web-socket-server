@@ -58,6 +58,12 @@ public class AppUser extends AbstractAuditingEntity<Long> {
     @Column(nullable = false)
     private boolean activated = false;
 
+    @Column(nullable = false, name = "is_online")
+    private boolean isOnline = false;
+
+    @Column(name = "socket_session_id")
+    private String socketSessionId;
+
     @Size(max = 20)
     @Column(name = "activation_key", length = 20)
     @JsonIgnore
@@ -84,7 +90,6 @@ public class AppUser extends AbstractAuditingEntity<Long> {
     @ManyToMany(mappedBy = "appUsers")
     private Set<Room> rooms = new HashSet<>();
 
-    // Many-to-Many relationship for "friends" or "connections"
     @ManyToMany
     @JoinTable(
             name = "user_contacts",

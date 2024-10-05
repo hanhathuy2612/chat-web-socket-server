@@ -3,6 +3,7 @@ package com.example.chat_backend.service.impl;
 import com.example.chat_backend.config.security.SecurityUtils;
 import com.example.chat_backend.domain.AppUser;
 import com.example.chat_backend.domain.Authority;
+import com.example.chat_backend.domain.enumerate.OnlineStatus;
 import com.example.chat_backend.repository.AppUserRepository;
 import com.example.chat_backend.rest.request.ContactQueryParams;
 import com.example.chat_backend.service.AccountService;
@@ -79,6 +80,16 @@ public class AccountServiceImpl implements AccountService {
                 .findAllByContactOf_Login(username, pageable)
                 .map(AppUserDTO::new)
                 .getContent();
+    }
+
+    @Override
+    public void updateOnlineStatus(String email, String sessionId, OnlineStatus onlineStatus) {
+        AppUser appUser = appUserRepository.findOneWithAuthoritiesByLogin(email).orElseThrow(
+                () -> new RuntimeException("User not found with email: " + email)
+        );
+        appUser.setOnline(onlineStatus == OnlineStatus.ONLINE);
+        appUser.setSocketSessionId(sessionId);
+        appUserRepository.save(appUser);
     }
 
     private boolean existsByUsername(String username) {

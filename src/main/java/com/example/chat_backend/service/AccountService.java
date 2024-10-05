@@ -1,5 +1,6 @@
 package com.example.chat_backend.service;
 
+import com.example.chat_backend.domain.enumerate.OnlineStatus;
 import com.example.chat_backend.rest.request.ContactQueryParams;
 import com.example.chat_backend.service.dto.AppUserDTO;
 import jakarta.validation.Valid;
@@ -15,4 +16,6 @@ public interface AccountService {
     AppUserDTO getAccountInfo();
 
     List<AppUserDTO> getContacts(ContactQueryParams queryParams, Pageable pageable);
+
+    void updateOnlineStatus(String email, String sessionId, OnlineStatus onlineStatus);
 }
