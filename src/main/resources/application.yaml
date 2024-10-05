@@ -1,10 +1,16 @@
+server:
+  port: 8080
+
+logging:
+  level:
+    com.example.chat_backend: debug
 spring:
   liquibase:
     change-log: classpath:liquibase/master.xml
   datasource:
-    url: jdbc:mysql://localhost:3306/chat_app
+    url: jdbc:mysql://localhost:3306/chat_app?createIfNotExists=true
     username: root
-    password: FormosVN@123
+    password: root
     driver-class-name: com.mysql.cj.jdbc.Driver
     hikari:
       pool-name: hikari-id
@@ -27,7 +33,7 @@ spring:
       naming:
         implicit-strategy: org.hibernate.boot.model.naming.ImplicitNamingStrategyLegacyJpaImpl
         physical-strategy: org.hibernate.boot.model.naming.CamelCaseToUnderscoresNamingStrategy
-        
+
 app:
   security:
     authentication:

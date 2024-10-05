@@ -84,11 +84,27 @@ public class AppUser extends AbstractAuditingEntity<Long> {
     @ManyToMany(mappedBy = "appUsers")
     private Set<Room> rooms = new HashSet<>();
 
+    // Many-to-Many relationship for "friends" or "connections"
+    @ManyToMany
+    @JoinTable(
+            name = "user_contacts",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "contact_id")
+    )
+    private Set<AppUser> contacts;
+
+    @ManyToMany(mappedBy = "contacts")
+    private Set<AppUser> contactOf;
+
     public AppUser(AppUserDTO dto) {
         this.id = dto.getId();
         this.login = dto.getLogin();
         this.email = dto.getEmail();
         this.firstName = dto.getFirstName();
         this.lastName = dto.getLastName();
+    }
+
+    public void addContact(AppUser contact) {
+        this.contacts.add(contact);
     }
 }

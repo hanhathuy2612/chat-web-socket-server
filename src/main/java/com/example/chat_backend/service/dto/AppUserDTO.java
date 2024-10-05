@@ -2,6 +2,7 @@ package com.example.chat_backend.service.dto;
 
 import com.example.chat_backend.domain.AppUser;
 import com.example.chat_backend.domain.Room;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -21,6 +22,7 @@ import java.util.Set;
 @Setter
 @SuperBuilder
 @NoArgsConstructor
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class AppUserDTO extends AuditDTO {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

@@ -1,12 +1,17 @@
 package com.example.chat_backend.rest;
 
+import com.example.chat_backend.rest.request.ContactQueryParams;
 import com.example.chat_backend.rest.request.LoginRequest;
+import com.example.chat_backend.service.AccountService;
+import com.example.chat_backend.service.dto.AppUserDTO;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,20 +24,19 @@ import org.springframework.security.oauth2.jwt.JwsHeader;
 import org.springframework.security.oauth2.jwt.JwtClaimsSet;
 import org.springframework.security.oauth2.jwt.JwtEncoder;
 import org.springframework.security.oauth2.jwt.JwtEncoderParameters;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
+import java.util.List;
 import java.util.stream.Collectors;
 
 import static com.example.chat_backend.config.security.SecurityUtils.AUTHORITIES_KEY;
 import static com.example.chat_backend.config.security.SecurityUtils.JWT_ALGORITHM;
 
 @Slf4j
-@RestController("api")
+@RestController
+@RequestMapping("api")
 @RequiredArgsConstructor
 public class AccountResource {
 
@@ -46,8 +50,10 @@ public class AccountResource {
 
     private final AuthenticationManagerBuilder authenticationManagerBuilder;
 
-    @PostMapping("/authenticate")
-    public ResponseEntity<JWTToken> authorize(@Valid @RequestBody LoginRequest request) {
+    private final AccountService accountService;
+
+    @PostMapping("/account/login")
+    public ResponseEntity<JWTToken> login(@Valid @RequestBody LoginRequest request) {
         UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(
             request.getUsername(),
             request.getPassword()
@@ -73,7 +79,34 @@ public class AccountResource {
         return request.getRemoteUser();
     }
 
-    public String createToken(Authentication authentication, boolean rememberMe) {
+    @GetMapping("account")
+    public ResponseEntity<AppUserDTO> getAccountInfo() {
+        return ResponseEntity.ok(
+                accountService.getAccountInfo()
+        );
+    }
+
+    @PostMapping("account")
+    public ResponseEntity<AppUserDTO> signupUser(@RequestBody @Valid AppUserDTO request) {
+        return ResponseEntity.ok(
+                accountService.signup(request)
+        );
+    }
+
+    @PostMapping("account/contacts")
+    public ResponseEntity<Void> addContact(@RequestBody AppUserDTO contact) {
+        accountService.addContact(contact);
+        return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("account/contacts")
+    public ResponseEntity<List<AppUserDTO>> getContacts(@ParameterObject ContactQueryParams queryParams, @ParameterObject Pageable pageable) {
+        return ResponseEntity.ok(
+                accountService.getContacts(queryParams, pageable)
+        );
+    }
+
+    private String createToken(Authentication authentication, boolean rememberMe) {
         String authorities = authentication.getAuthorities().stream().map(GrantedAuthority::getAuthority).collect(Collectors.joining(" "));
 
         Instant now = Instant.now();

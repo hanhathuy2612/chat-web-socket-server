@@ -1,11 +1,13 @@
 package com.example.chat_backend.domain;
 
+import com.example.chat_backend.service.dto.RoomDTO;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 
 import java.util.HashSet;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Entity
 @Table(name = "room")
@@ -34,4 +36,10 @@ public class Room extends AbstractAuditingEntity<Long> {
 
     @OneToMany(mappedBy = "room")
     private Set<ChatMessage> chatMessages = new HashSet<>();
+
+    public Room(RoomDTO roomDTO) {
+        this.id = roomDTO.getId();
+        this.name = roomDTO.getName();
+        this.appUsers = roomDTO.getAppUsers().stream().map(AppUser::new).collect(Collectors.toSet());
+    }
 }

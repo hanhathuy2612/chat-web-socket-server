@@ -24,6 +24,8 @@ public class ChatMessage extends AbstractAuditingEntity<Long> {
     @Enumerated(EnumType.STRING)
     private MessageType type;
 
+    @Lob
+    @Column(columnDefinition = "TEXT")
     private String content;
 
     @ManyToOne

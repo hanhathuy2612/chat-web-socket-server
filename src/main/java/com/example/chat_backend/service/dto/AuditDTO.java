@@ -1,9 +1,6 @@
 package com.example.chat_backend.service.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import lombok.experimental.SuperBuilder;
 
 import java.io.Serializable;
@@ -18,9 +15,9 @@ public abstract class AuditDTO implements Serializable {
 
     private String createdBy;
 
-    private Instant createdDate = Instant.now();
+    private Instant createdDate;
 
     private String lastModifiedBy;
 
-    private Instant lastModifiedDate = Instant.now();
+    private Instant lastModifiedDate;
 }
