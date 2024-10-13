@@ -1,4 +1,4 @@
-package com.example.chat_backend.web_socket;
+package com.example.chat_backend.config.web_socket;
 
 import com.example.chat_backend.domain.enumerate.OnlineStatus;
 import com.example.chat_backend.service.AccountService;

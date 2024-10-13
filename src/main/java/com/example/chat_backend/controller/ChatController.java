@@ -4,8 +4,7 @@ import com.example.chat_backend.service.ChatMessageService;
 import com.example.chat_backend.service.dto.ChatMessageDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.messaging.handler.annotation.MessageMapping;
-import org.springframework.messaging.handler.annotation.Payload;
-import org.springframework.messaging.simp.SimpMessagingTemplate;
+import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.stereotype.Controller;
 
 @Controller
@@ -13,10 +12,10 @@ import org.springframework.stereotype.Controller;
 public class ChatController {
     private final ChatMessageService chatMessageService;
 
-    @MessageMapping("/send")
-    public ChatMessageDTO send(@Payload ChatMessageDTO chatMessage) {
+    @MessageMapping("/chat.sendMessage")
+    @SendTo("/topic/public")
+    public ChatMessageDTO sendMessage(ChatMessageDTO chatMessage) {
         chatMessage = chatMessageService.create(chatMessage);
-
         return chatMessage;
     }
 }
