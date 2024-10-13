@@ -40,6 +40,9 @@ public class ChatMessage extends AbstractAuditingEntity<Long> {
         this.id = dto.getId();
         this.type = dto.getType();
         this.content = dto.getContent();
+        if (Objects.nonNull(dto.getRoom())) {
+            this.room = new Room(dto.getRoom());
+        }
         if (Objects.nonNull(dto.getSender())) {
             this.sender = new AppUser(dto.getSender());
         }
