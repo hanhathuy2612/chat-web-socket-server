@@ -1,8 +1,15 @@
 package com.example.chat_backend.service.dto;
 
+import java.time.Instant;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
 import com.example.chat_backend.domain.AppUser;
-import com.example.chat_backend.domain.Room;
+import com.example.chat_backend.service.dto.room.RoomDTO;
 import com.fasterxml.jackson.annotation.JsonInclude;
+
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -11,12 +18,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.SuperBuilder;
-
-import java.time.Instant;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
 
 @Getter
 @Setter
@@ -38,12 +39,14 @@ public class AppUserDTO extends AuditDTO {
 
     private String email;
 
+    @Builder.Default
     private boolean activated = false;
 
     private String activationKey;
 
     private String resetKey;
 
+    @Builder.Default
     private Instant resetDate = null;
 
     @Builder.Default

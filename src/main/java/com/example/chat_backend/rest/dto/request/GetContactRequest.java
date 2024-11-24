@@ -1,4 +1,4 @@
-package com.example.chat_backend.rest.request;
+package com.example.chat_backend.rest.dto.request;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -9,6 +9,6 @@ import lombok.experimental.SuperBuilder;
 @Setter
 @SuperBuilder
 @NoArgsConstructor
-public class ContactQueryParams {
+public class GetContactRequest {
     private String keyword;
 }

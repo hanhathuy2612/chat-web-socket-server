@@ -1,7 +1,7 @@
 package com.example.chat_backend.service;
 
 import com.example.chat_backend.domain.enumerate.OnlineStatus;
-import com.example.chat_backend.rest.request.ContactQueryParams;
+import com.example.chat_backend.rest.dto.request.GetContactRequest;
 import com.example.chat_backend.service.dto.AppUserDTO;
 import jakarta.validation.Valid;
 import org.springframework.data.domain.Pageable;
@@ -15,7 +15,7 @@ public interface AccountService {
 
     AppUserDTO getAccountInfo();
 
-    List<AppUserDTO> getContacts(ContactQueryParams queryParams, Pageable pageable);
+    List<AppUserDTO> getContacts(GetContactRequest queryParams, Pageable pageable);
 
     void updateOnlineStatus(String email, String sessionId, OnlineStatus onlineStatus);
 }

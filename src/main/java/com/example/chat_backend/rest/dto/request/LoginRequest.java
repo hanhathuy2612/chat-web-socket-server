@@ -1,4 +1,4 @@
-package com.example.chat_backend.rest.request;
+package com.example.chat_backend.rest.dto.request;
 
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;

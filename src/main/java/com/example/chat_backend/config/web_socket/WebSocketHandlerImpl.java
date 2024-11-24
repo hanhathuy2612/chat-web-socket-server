@@ -55,10 +55,18 @@ public class WebSocketHandlerImpl extends TextWebSocketHandler {
     private void handleOnlineStatus(ChatMessageDTO chatMessageDTO, WebSocketSession session) {
         switch (chatMessageDTO.getType()) {
             case CONNECTED:
-                accountService.updateOnlineStatus(chatMessageDTO.getSender().getEmail(), session.getId(), OnlineStatus.ONLINE);
+                accountService.updateOnlineStatus(chatMessageDTO.getSender().getEmail(), session.getId(),
+                        OnlineStatus.ONLINE);
                 break;
             case DISCONNECTED:
-                accountService.updateOnlineStatus(chatMessageDTO.getSender().getEmail(), session.getId(), OnlineStatus.OFFLINE);
+                accountService.updateOnlineStatus(chatMessageDTO.getSender().getEmail(), session.getId(),
+                        OnlineStatus.OFFLINE);
+                break;
+            case CHAT:
+                // No online status update needed for chat messages
+                break;
+            default:
+                log.debug("Unhandled message type: {}", chatMessageDTO.getType());
         }
     }
 }

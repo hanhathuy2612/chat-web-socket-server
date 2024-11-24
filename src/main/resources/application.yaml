@@ -3,7 +3,11 @@ server:
 
 logging:
   level:
-    com.example.chat_backend: debug
+    ROOT: INFO
+    tech.jhipster: INFO
+    org.hibernate.SQL: INFO
+    com.example.chat_backend: INFO
+
 spring:
   liquibase:
     change-log: classpath:liquibase/master.xml
@@ -40,4 +44,4 @@ app:
       jwt:
         base64-secret: YWM2YTk3OTA2MGZmNzRhMjc0OGNhYTA5ZGJkZGIyNjU2ZTVlOTQyNWI3YTljNzlkZDM4ZjAzMWU2Yjc3ZjYwYWM3NjNmNzFkMDFjMGZhMGUxZDY2ZTQ3NTcwNzZlOGMxYzRhZDlkN2YzZjY0MDE0OGFlZWU3OGU0M2I2ZWI3NzU=
         token-validity-in-seconds: 86400
-        token-validity-in-seconds-for-remember-me: 2592000 
+        token-validity-in-seconds-for-remember-me: 2592000

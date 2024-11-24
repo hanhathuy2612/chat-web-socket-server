@@ -5,7 +5,7 @@ import com.example.chat_backend.domain.AppUser;
 import com.example.chat_backend.domain.Authority;
 import com.example.chat_backend.domain.enumerate.OnlineStatus;
 import com.example.chat_backend.repository.AppUserRepository;
-import com.example.chat_backend.rest.request.ContactQueryParams;
+import com.example.chat_backend.rest.dto.request.GetContactRequest;
 import com.example.chat_backend.service.AccountService;
 import com.example.chat_backend.service.dto.AppUserDTO;
 import jakarta.transaction.Transactional;
@@ -71,7 +71,7 @@ public class AccountServiceImpl implements AccountService {
     }
 
     @Override
-    public List<AppUserDTO> getContacts(ContactQueryParams queryParams, Pageable pageable) {
+    public List<AppUserDTO> getContacts(GetContactRequest queryParams, Pageable pageable) {
         String username = SecurityUtils.getCurrentUserLogin().orElseThrow(
                 () -> new RuntimeException("User not logged in")
         );

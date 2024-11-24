@@ -2,6 +2,9 @@ package com.example.chat_backend.service.dto;
 
 import com.example.chat_backend.domain.ChatMessage;
 import com.example.chat_backend.domain.enumerate.MessageType;
+import com.example.chat_backend.service.dto.room.RoomDTO;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -19,8 +22,10 @@ public class ChatMessageDTO extends AuditDTO {
 
     private String content;
 
+    @JsonIgnoreProperties(value = { "rooms" }, allowSetters = true)
     private AppUserDTO sender;
     
+    @JsonIgnoreProperties(value = { "lastMessage", "appUsers" }, allowSetters = true)
     private RoomDTO room;
 
     public ChatMessageDTO(ChatMessage chatMessage) {

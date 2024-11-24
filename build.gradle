@@ -11,6 +11,11 @@ java {
     sourceCompatibility = '17'
 }
 
+ext {
+    lombokVersion = '1.18.30'
+    mapstructVersion = '1.5.3.Final'
+}
+
 configurations {
     compileOnly {
         extendsFrom annotationProcessor
@@ -34,14 +39,12 @@ dependencies {
     implementation "org.springframework.boot:spring-boot-starter-oauth2-resource-server"
     annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
-    /**
-     * lombok
-     */
-    compileOnly 'org.projectlombok:lombok'
-    annotationProcessor 'org.projectlombok:lombok'
-    /**
-     * mysql
-     */
+
+    // Lombok
+    compileOnly "org.projectlombok:lombok:${lombokVersion}"
+    annotationProcessor "org.projectlombok:lombok:${lombokVersion}"
+
+    // Mysql
     runtimeOnly 'com.mysql:mysql-connector-j'
 
     implementation "jakarta.annotation:jakarta.annotation-api"
@@ -53,10 +56,10 @@ dependencies {
         exclude group: "org.slf4j", module: "slf4j-api"
         exclude group: "org.slf4j", module: "slf4j-simple"
     }
-    
-    // mapstruct
-    implementation 'org.mapstruct:mapstruct:1.5.3.Final'
-    annotationProcessor 'org.mapstruct:mapstruct-processor:1.5.3.Final'
+
+    // MapStruct
+    implementation "org.mapstruct:mapstruct:$mapstructVersion"
+    annotationProcessor "org.mapstruct:mapstruct-processor:$mapstructVersion"
 
     // jackson-datatype-jsr310
     implementation 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.15.2'

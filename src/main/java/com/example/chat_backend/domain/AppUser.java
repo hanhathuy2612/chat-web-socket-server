@@ -54,10 +54,12 @@ public class AppUser extends AbstractAuditingEntity<Long> {
     @Column(length = 254, unique = true)
     private String email;
 
+    @Builder.Default
     @NotNull
     @Column(nullable = false)
     private boolean activated = false;
 
+    @Builder.Default
     @Column(nullable = false, name = "is_online")
     private boolean isOnline = false;
 
@@ -74,6 +76,7 @@ public class AppUser extends AbstractAuditingEntity<Long> {
     @JsonIgnore
     private String resetKey;
 
+    @Builder.Default
     @Column(name = "reset_date")
     private Instant resetDate = null;
 
@@ -90,16 +93,18 @@ public class AppUser extends AbstractAuditingEntity<Long> {
     @ManyToMany(mappedBy = "appUsers")
     private Set<Room> rooms = new HashSet<>();
 
+    @Builder.Default
     @ManyToMany
     @JoinTable(
             name = "user_contacts",
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "contact_id")
     )
-    private Set<AppUser> contacts;
+    private Set<AppUser> contacts = new HashSet<>();
 
+    @Builder.Default
     @ManyToMany(mappedBy = "contacts")
-    private Set<AppUser> contactOf;
+    private Set<AppUser> contactOf = new HashSet<>();
 
     public AppUser(AppUserDTO dto) {
         this.id = dto.getId();
@@ -111,5 +116,13 @@ public class AppUser extends AbstractAuditingEntity<Long> {
 
     public void addContact(AppUser contact) {
         this.contacts.add(contact);
+    }
+
+    public void removeContact(AppUser contact) {
+        this.contacts.remove(contact);
+    }
+
+    public boolean hasContact(AppUser contact) {
+        return this.contacts.contains(contact);
     }
 }

@@ -1,12 +1,36 @@
 package com.example.chat_backend.service;
 
-import com.example.chat_backend.service.dto.RoomDTO;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+
+import com.example.chat_backend.service.dto.room.CreateRoomCommand;
+import com.example.chat_backend.service.dto.room.RoomDTO;
 
 import java.util.List;
 
 public interface RoomService {
-    List<RoomDTO> getUserRooms(String username, Pageable pageable);
+    /**
+     * Get user rooms.
+     * 
+     * @param username the username.
+     * @param pageable the pageable.
+     * @return the rooms.
+     */
+    Page<RoomDTO> getUserRooms(String username, Pageable pageable);
 
-    RoomDTO create(RoomDTO roomDTO);
+    /**
+     * Create a room.
+     * 
+     * @param command the create room command.
+     * @return the room.
+     */
+    RoomDTO create(CreateRoomCommand command);
+
+    /**
+     * Get room with exact users.
+     * 
+     * @param emails the users email.
+     * @return the room.
+     */
+    RoomDTO getRoomWithExactUsers(List<String> emails);
 }
