@@ -13,10 +13,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -46,8 +43,8 @@ public class RoomServiceImpl implements RoomService {
                 .collect(Collectors.toSet());
 
         // Query join fetch to avoid N+1
-        boolean roomExists = roomRepository.existsRoomWithExactUsers(newRoomEmails, newRoomEmails.size());
-        if (roomExists) {
+        Boolean roomExists = roomRepository.existsRoomWithExactUsers(newRoomEmails, newRoomEmails.size());
+        if (Boolean.TRUE.equals(roomExists)) {
             throw new RuntimeException("Room already exists between these users");
         }
 
@@ -73,7 +70,14 @@ public class RoomServiceImpl implements RoomService {
 
     @Override
     public RoomDTO getRoomWithExactUsers(List<String> emails) {
-        Room room = roomRepository.findRoomWithExactUsers(new HashSet<>(emails), emails.size());
-        return new RoomDTO(room);
+        Optional<Room> optionalRoom = roomRepository.findRoomWithExactUsers(new HashSet<>(emails), emails.size());
+        return optionalRoom.map(roomMapper::toDto).orElse(null);
+    }
+
+    @Override
+    public RoomDTO findById(UUID roomId) {
+        return this.roomRepository.findById(roomId)
+                .map(this.roomMapper::toDto)
+                .orElse(null);
     }
 }

@@ -10,13 +10,14 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.util.Objects;
+import java.util.UUID;
 
 @Getter
 @Setter
 @NoArgsConstructor
 public class ChatMessageDTO extends AuditDTO {
 
-    private Long id;
+    private UUID id;
 
     private MessageType type;
 

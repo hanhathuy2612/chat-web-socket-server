@@ -9,6 +9,7 @@ import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 
 import java.util.Objects;
+import java.util.UUID;
 
 @Entity
 @Table(name = "chat_message")
@@ -16,10 +17,12 @@ import java.util.Objects;
 @Setter
 @NoArgsConstructor
 @SuperBuilder(toBuilder = true)
-public class ChatMessage extends AbstractAuditingEntity<Long> {
+public class ChatMessage extends AbstractAuditingEntity<UUID> {
+
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @GeneratedValue(strategy = GenerationType.UUID)
+    @Column(name = "id", columnDefinition = "BINARY(16)")
+    private UUID id;
 
     @Enumerated(EnumType.STRING)
     private MessageType type;
@@ -40,10 +43,10 @@ public class ChatMessage extends AbstractAuditingEntity<Long> {
         this.id = dto.getId();
         this.type = dto.getType();
         this.content = dto.getContent();
-        if (Objects.nonNull(dto.getRoom()) && dto.getRoom().getId() != 0) {
+        if (Objects.nonNull(dto.getRoom())) {
             this.room = new Room(dto.getRoom());
         }
-        if (Objects.nonNull(dto.getSender()) && dto.getSender().getId() != 0) {
+        if (Objects.nonNull(dto.getSender())) {
             this.sender = new AppUser(dto.getSender());
         }
     }

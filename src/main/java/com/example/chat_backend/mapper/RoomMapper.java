@@ -1,8 +1,12 @@
 package com.example.chat_backend.mapper;
 
 import java.util.Comparator;
+import java.util.List;
 import java.util.Set;
 
+import com.example.chat_backend.domain.AppUser;
+import com.example.chat_backend.service.dto.AppUserDTO;
+import org.mapstruct.IterableMapping;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
@@ -18,7 +22,7 @@ import org.mapstruct.Named;
 @Mapper(componentModel = "spring")
 public interface RoomMapper {
 
-    @Mapping(target = "appUsers", ignore = true)
+    @Mapping(target = "appUsers", source = "appUsers", qualifiedByName = "toAppUserDTOS")
     @Mapping(target = "lastMessage", source = "chatMessages", qualifiedByName = "toLastMessageDTO")
     RoomDTO toDto(Room room);
 
@@ -27,6 +31,14 @@ public interface RoomMapper {
     CreateRoomCommand toCreateCommand(CreateRoomRequest request);
 
     RoomResponse toResponse(RoomDTO dto);
+
+    @Named("toAppUserDTOS")
+    @IterableMapping(qualifiedByName = "toAppUserDTO")
+    List<AppUserDTO> toAppUserDTOS(Set<AppUser> appUsers);
+
+    @Named("toAppUserDTO")
+    @Mapping(target = "rooms", ignore = true)
+    AppUserDTO toAppUserDTO(AppUser appUsers);
 
     @Named("toLastMessageDTO")
     default ChatMessageDTO toLastMessageDTO(Set<ChatMessage> chatMessages) {

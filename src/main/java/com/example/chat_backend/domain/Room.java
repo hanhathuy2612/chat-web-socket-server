@@ -1,14 +1,14 @@
 package com.example.chat_backend.domain;
 
+import com.example.chat_backend.service.dto.room.RoomDTO;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 
 import java.util.HashSet;
 import java.util.Set;
+import java.util.UUID;
 import java.util.stream.Collectors;
-
-import com.example.chat_backend.service.dto.room.RoomDTO;
 
 @Entity
 @Table(name = "room")
@@ -17,10 +17,11 @@ import com.example.chat_backend.service.dto.room.RoomDTO;
 @NoArgsConstructor
 @AllArgsConstructor
 @SuperBuilder(toBuilder = true)
-public class Room extends AbstractAuditingEntity<Long> {
+public class Room extends AbstractAuditingEntity<UUID> {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @GeneratedValue(strategy = GenerationType.UUID)
+    @Column(name = "id", columnDefinition = "BINARY(16)")
+    private UUID id;
 
     private String name;
 

@@ -17,6 +17,7 @@ import lombok.experimental.SuperBuilder;
 import java.time.Instant;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.UUID;
 
 @Entity
 @Table(name = "app_user")
@@ -24,10 +25,12 @@ import java.util.Set;
 @Setter
 @SuperBuilder(toBuilder = true)
 @NoArgsConstructor
-public class AppUser extends AbstractAuditingEntity<Long> {
+public class AppUser extends AbstractAuditingEntity<UUID> {
+
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @GeneratedValue(strategy = GenerationType.UUID)
+    @Column(name = "id", columnDefinition = "BINARY(16)")
+    private UUID id;
 
     @NotNull
     @Pattern(regexp = Constants.LOGIN_REGEX)
@@ -83,9 +86,11 @@ public class AppUser extends AbstractAuditingEntity<Long> {
     @Builder.Default
     @ManyToMany
     @JoinTable(
-        name = "app_user_authority",
-        joinColumns = {@JoinColumn(name = "user_id", referencedColumnName = "id")},
-        inverseJoinColumns = {@JoinColumn(name = "authority_name", referencedColumnName = "name")}
+            name = "app_user_authority",
+            joinColumns = {
+                @JoinColumn(name = "user_id", referencedColumnName = "id")},
+            inverseJoinColumns = {
+                @JoinColumn(name = "authority_name", referencedColumnName = "name")}
     )
     private Set<Authority> authorities = new HashSet<>();
 
@@ -112,9 +117,13 @@ public class AppUser extends AbstractAuditingEntity<Long> {
         this.email = dto.getEmail();
         this.firstName = dto.getFirstName();
         this.lastName = dto.getLastName();
+        this.activated = dto.isActivated();
     }
 
     public void addContact(AppUser contact) {
+        if (this.equals(contact)) {
+            throw new IllegalArgumentException("User cannot add themselves as contact");
+        }
         this.contacts.add(contact);
     }
 

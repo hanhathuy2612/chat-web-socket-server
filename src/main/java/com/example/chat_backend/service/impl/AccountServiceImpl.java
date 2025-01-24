@@ -37,6 +37,7 @@ public class AccountServiceImpl implements AccountService {
                         new Authority().name("ROLE_USER")
                 )
         );
+        appUser.setActivated(true);
         appUser = appUserRepository.save(appUser);
         return new AppUserDTO(appUser);
     }

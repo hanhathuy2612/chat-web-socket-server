@@ -1,6 +1,7 @@
 package com.example.chat_backend.rest;
 
 import java.util.List;
+import java.util.UUID;
 
 import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.data.domain.Pageable;
@@ -21,6 +22,6 @@ public interface IChatMessageResource {
      * @return the chat messages.
      */
     @GetMapping("/room/{roomId}")
-    ResponseEntity<List<ChatMessageDTO>> getChatMessages(@PathVariable("roomId") Long roomId,
+    ResponseEntity<List<ChatMessageDTO>> getChatMessages(@PathVariable("roomId") UUID roomId,
             @ParameterObject Pageable pageable);
 }

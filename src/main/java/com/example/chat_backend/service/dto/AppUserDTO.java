@@ -1,10 +1,7 @@
 package com.example.chat_backend.service.dto;
 
 import java.time.Instant;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 import com.example.chat_backend.domain.AppUser;
 import com.example.chat_backend.service.dto.room.RoomDTO;
@@ -25,9 +22,7 @@ import lombok.experimental.SuperBuilder;
 @NoArgsConstructor
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class AppUserDTO extends AuditDTO {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private UUID id;
 
     private String login;
 

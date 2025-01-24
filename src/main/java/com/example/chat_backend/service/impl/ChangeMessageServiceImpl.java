@@ -10,6 +10,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -31,7 +32,7 @@ public class ChangeMessageServiceImpl implements ChatMessageService {
     }
 
     @Override
-    public List<ChatMessageDTO> query(Long roomId, Pageable pageable) {
+    public List<ChatMessageDTO> query(UUID roomId, Pageable pageable) {
         return chatMessageRepository.findAllByRoomId(roomId, pageable).map(ChatMessageDTO::new).getContent();
     }
 }

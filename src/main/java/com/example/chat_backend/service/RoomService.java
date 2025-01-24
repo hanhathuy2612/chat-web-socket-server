@@ -7,6 +7,7 @@ import com.example.chat_backend.service.dto.room.CreateRoomCommand;
 import com.example.chat_backend.service.dto.room.RoomDTO;
 
 import java.util.List;
+import java.util.UUID;
 
 public interface RoomService {
     /**
@@ -33,4 +34,11 @@ public interface RoomService {
      * @return the room.
      */
     RoomDTO getRoomWithExactUsers(List<String> emails);
+
+    /**
+     * Find room by id
+     * @param roomId room id
+     * @return the room
+     */
+    RoomDTO findById(UUID roomId);
 }

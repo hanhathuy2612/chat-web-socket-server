@@ -1,14 +1,5 @@
 package com.example.chat_backend.rest.impl;
 
-import java.util.List;
-
-import org.springdoc.core.annotations.ParameterObject;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
-
 import com.example.chat_backend.common.response.ApiResponse;
 import com.example.chat_backend.common.response.PageResponse;
 import com.example.chat_backend.config.security.SecurityUtils;
@@ -18,9 +9,16 @@ import com.example.chat_backend.rest.dto.request.CreateRoomRequest;
 import com.example.chat_backend.rest.dto.response.RoomResponse;
 import com.example.chat_backend.service.RoomService;
 import com.example.chat_backend.service.dto.room.RoomDTO;
-
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springdoc.core.annotations.ParameterObject;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
 
 @Slf4j
 @RestController
@@ -43,8 +41,11 @@ public class RoomResource implements IRoomResource {
     @Override
     public ResponseEntity<RoomDTO> getRoomByUsers(List<String> emails) {
         log.info("Getting room with exact users: {}", emails);
-        return ResponseEntity.ok(
-                roomService.getRoomWithExactUsers(emails));
+        RoomDTO roomDTO = roomService.getRoomWithExactUsers(emails);
+        if (roomDTO == null) {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(roomDTO);
     }
 
     @Override
