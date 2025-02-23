@@ -1,5 +1,6 @@
 package com.example.chat_backend.controller;
 
+import com.example.chat_backend.domain.enumerate.MessageType;
 import com.example.chat_backend.service.ChatMessageService;
 import com.example.chat_backend.service.RoomService;
 import com.example.chat_backend.service.dto.ChatMessageDTO;
@@ -31,13 +32,18 @@ public class ChatController {
     @MessageMapping("/room/{roomId}/messages")
     public void sendMessage(@DestinationVariable UUID roomId, @Payload ChatMessageDTO chatMessage) {
         log.info("Send message to room {}", roomId);
-        chatMessage = chatMessageService.create(chatMessage);
 
         RoomDTO room = this.roomService.findById(roomId);
         if (room == null) {
             return;
         }
-        this.sendToUsersInRoom(chatMessage, room);
+
+        if (MessageType.TYPING.equals(chatMessage.getType())) {
+            handleTyping(chatMessage, room);
+            return;
+        }
+
+        handleMessage(chatMessage, room);
     }
 
     @MessageMapping("/chat.roomUpdates")
@@ -47,12 +53,26 @@ public class ChatController {
         return chatMessageService.query(null, Pageable.unpaged());
     }
 
-    private void sendToUsersInRoom(ChatMessageDTO chatMessage, RoomDTO room) {
-        room.getAppUsers()
-                .forEach(user -> this.sendMessageToUser(user.getId(), chatMessage));
+    private void handleMessage(ChatMessageDTO chatMessage, RoomDTO room) {
+        chatMessage = chatMessageService.create(chatMessage);
+        this.sendToUsersInRoom(chatMessage, room);
     }
 
-    private void sendMessageToUser(UUID userId, ChatMessageDTO chatMessage) {
-        simpMessagingTemplate.convertAndSend("/chat/user/" + userId, chatMessage);
+    private void handleTyping(ChatMessageDTO chatMessage, RoomDTO room) {
+        this.sendToUsersInRoom(chatMessage, room);
+    }
+
+    private void sendToUsersInRoom(ChatMessageDTO chatMessage, RoomDTO room) {
+        room.getAppUsers()
+                .forEach(user -> this.sendMessageToUser("/chat/user/" + user.getId(), chatMessage));
+    }
+
+    private void sendTypingToUsersInRoom(ChatMessageDTO chatMessage, RoomDTO room) {
+        room.getAppUsers()
+                .forEach(user -> this.sendMessageToUser("/chat/user/" + user.getId() + "/typing", chatMessage));
+    }
+
+    private void sendMessageToUser(String destination, ChatMessageDTO chatMessage) {
+        simpMessagingTemplate.convertAndSend(destination, chatMessage);
     }
 }

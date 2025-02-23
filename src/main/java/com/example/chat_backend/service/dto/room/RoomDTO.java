@@ -48,4 +48,8 @@ public class RoomDTO extends AuditDTO {
                 .map(ChatMessageDTO::new)
                 .orElse(null);
     }
+
+    public RoomDTO(UUID roomId) {
+        this.id = roomId;
+    }
 }

@@ -1,5 +1,8 @@
 package com.example.chat_backend.service.dto;
 
+import java.util.Objects;
+import java.util.UUID;
+
 import com.example.chat_backend.domain.ChatMessage;
 import com.example.chat_backend.domain.enumerate.MessageType;
 import com.example.chat_backend.service.dto.room.RoomDTO;
@@ -8,9 +11,6 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-
-import java.util.Objects;
-import java.util.UUID;
 
 @Getter
 @Setter
@@ -33,6 +33,7 @@ public class ChatMessageDTO extends AuditDTO {
         this.id = chatMessage.getId();
         this.content = chatMessage.getContent();
         this.type = chatMessage.getType();
+        this.room = new RoomDTO(chatMessage.getRoom().getId());
         
         if (Objects.nonNull(chatMessage.getSender())) {
             this.sender = new AppUserDTO(chatMessage.getSender());

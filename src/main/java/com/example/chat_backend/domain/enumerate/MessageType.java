@@ -5,5 +5,6 @@ public enum MessageType {
     JOIN,
     LEAVE,
     CONNECTED,
-    DISCONNECTED
+    DISCONNECTED,
+    TYPING
 }
