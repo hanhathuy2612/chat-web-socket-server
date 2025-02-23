@@ -1,5 +1,6 @@
 package com.example.chat_backend.config.web_socket;
 
+import com.example.chat_backend.util.WebsocketUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.server.ServerHttpRequest;
 import org.springframework.http.server.ServerHttpResponse;
@@ -25,7 +26,8 @@ public class JwtHandshakeInterceptor implements HandshakeInterceptor {
     @Override
     public boolean beforeHandshake(ServerHttpRequest request, ServerHttpResponse response, WebSocketHandler wsHandler, Map<String, Object> attributes) throws Exception {
         if (request instanceof ServletServerHttpRequest servletRequest) {
-            String token = extractTokenFromUrl(servletRequest);
+            String token = WebsocketUtil.extractTokenFromUrl(servletRequest);
+
             if (token == null || token.isEmpty()) {
                 return false;
             }
@@ -35,7 +37,7 @@ public class JwtHandshakeInterceptor implements HandshakeInterceptor {
                 if (Objects.nonNull(jwt)) {
                     Authentication authenticationToken = this.jwtAuthenticationConverter.convert(jwt);
                     SecurityContextHolder.getContext().setAuthentication(authenticationToken);
-                    attributes.put("username", authenticationToken.getName());
+                    attributes.put("auth", authenticationToken);
                 }
             } catch (Exception e) {
                 return false;
@@ -46,14 +48,5 @@ public class JwtHandshakeInterceptor implements HandshakeInterceptor {
 
     @Override
     public void afterHandshake(ServerHttpRequest request, ServerHttpResponse response, WebSocketHandler wsHandler, Exception exception) {
-
-    }
-
-    private String extractTokenFromUrl(ServletServerHttpRequest request) {
-        Map<String, String[]> params = request.getServletRequest().getParameterMap();
-        if (params.containsKey("token")) {
-            return params.get("token")[0];
-        }
-        return null;
     }
 }

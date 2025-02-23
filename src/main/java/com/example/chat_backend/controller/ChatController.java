@@ -1,5 +1,6 @@
 package com.example.chat_backend.controller;
 
+import com.example.chat_backend.config.web_socket.WebsocketPreAuthorize;
 import com.example.chat_backend.domain.enumerate.MessageType;
 import com.example.chat_backend.service.ChatMessageService;
 import com.example.chat_backend.service.RoomService;
@@ -14,8 +15,10 @@ import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 
+import java.security.Principal;
 import java.util.List;
 import java.util.UUID;
 
@@ -30,8 +33,10 @@ public class ChatController {
     private final SimpMessagingTemplate simpMessagingTemplate;
 
     @MessageMapping("/room/{roomId}/messages")
-    public void sendMessage(@DestinationVariable UUID roomId, @Payload ChatMessageDTO chatMessage) {
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    public void sendMessage(@DestinationVariable UUID roomId, @Payload ChatMessageDTO chatMessage, Principal principal) {
         log.info("Send message to room {}", roomId);
+        log.info("Send message to room principal {}", principal);
 
         RoomDTO room = this.roomService.findById(roomId);
         if (room == null) {
@@ -51,6 +56,12 @@ public class ChatController {
     public List<ChatMessageDTO> getRoomUpdates() {
         log.info("Get room updates for homepage");
         return chatMessageService.query(null, Pageable.unpaged());
+    }
+
+    @MessageMapping("/admin/send")
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
+    public void sendToAdmins(@Payload String message, Principal principal) {
+        System.out.println("Send message to admins");
     }
 
     private void handleMessage(ChatMessageDTO chatMessage, RoomDTO room) {
