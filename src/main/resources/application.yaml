@@ -9,7 +9,7 @@ spring:
   liquibase:
     change-log: classpath:liquibase/master.xml
   datasource:
-    url: jdbc:mysql://localhost:3306/chat_app?createIfNotExists=true
+    url: ${DATABASE_URL:jdbc:mysql://localhost:3306/chat_app?createIfNotExists=true}
     username: root
     password: root
     driver-class-name: com.mysql.cj.jdbc.Driver
@@ -25,7 +25,7 @@ spring:
       maximum-pool-size: 20
     type: com.zaxxer.hikari.HikariDataSource
   jpa:
-    show-sql: true
+    show-sql: false
     properties:
       hibernate.format_sql: false
       hibernate.dialect: org.hibernate.dialect.MySQL8Dialect

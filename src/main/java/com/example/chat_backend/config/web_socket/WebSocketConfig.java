@@ -1,5 +1,6 @@
 package com.example.chat_backend.config.web_socket;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.messaging.simp.config.ChannelRegistration;
@@ -14,15 +15,10 @@ import org.springframework.web.socket.config.annotation.WebSocketMessageBrokerCo
 @Slf4j
 @Configuration
 @EnableWebSocketMessageBroker
+@RequiredArgsConstructor
 public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
     private final JwtHandshakeInterceptor jwtHandshakeInterceptor;
     private final JwtChannelInterceptor jwtChannelInterceptor;
-
-    public WebSocketConfig(JwtHandshakeInterceptor jwtHandshakeInterceptor,
-                           JwtChannelInterceptor jwtChannelInterceptor) {
-        this.jwtHandshakeInterceptor = jwtHandshakeInterceptor;
-        this.jwtChannelInterceptor = jwtChannelInterceptor;
-    }
 
     @Override
     public void configureMessageBroker(MessageBrokerRegistry config) {

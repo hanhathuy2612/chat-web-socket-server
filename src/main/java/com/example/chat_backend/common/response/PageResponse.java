@@ -16,6 +16,7 @@ public record PageResponse<T>(
                 page.getNumber(),
                 page.getSize(),
                 page.getTotalElements(),
-                page.getTotalPages());
+                page.getTotalPages()
+        );
     }
 }

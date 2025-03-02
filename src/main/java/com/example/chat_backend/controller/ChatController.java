@@ -1,6 +1,5 @@
 package com.example.chat_backend.controller;
 
-import com.example.chat_backend.config.web_socket.WebsocketPreAuthorize;
 import com.example.chat_backend.domain.enumerate.MessageType;
 import com.example.chat_backend.service.ChatMessageService;
 import com.example.chat_backend.service.RoomService;
@@ -33,7 +32,6 @@ public class ChatController {
     private final SimpMessagingTemplate simpMessagingTemplate;
 
     @MessageMapping("/room/{roomId}/messages")
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public void sendMessage(@DestinationVariable UUID roomId, @Payload ChatMessageDTO chatMessage, Principal principal) {
         log.info("Send message to room {}", roomId);
         log.info("Send message to room principal {}", principal);
@@ -75,12 +73,12 @@ public class ChatController {
 
     private void sendToUsersInRoom(ChatMessageDTO chatMessage, RoomDTO room) {
         room.getAppUsers()
-                .forEach(user -> this.sendMessageToUser("/chat/user/" + user.getId(), chatMessage));
+            .forEach(user -> this.sendMessageToUser("/chat/user/" + user.getId(), chatMessage));
     }
 
     private void sendTypingToUsersInRoom(ChatMessageDTO chatMessage, RoomDTO room) {
         room.getAppUsers()
-                .forEach(user -> this.sendMessageToUser("/chat/user/" + user.getId() + "/typing", chatMessage));
+            .forEach(user -> this.sendMessageToUser("/chat/user/" + user.getId() + "/typing", chatMessage));
     }
 
     private void sendMessageToUser(String destination, ChatMessageDTO chatMessage) {
