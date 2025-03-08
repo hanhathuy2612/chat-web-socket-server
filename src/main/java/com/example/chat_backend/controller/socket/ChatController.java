@@ -73,12 +73,12 @@ public class ChatController {
 
     private void sendToUsersInRoom(ChatMessageDTO chatMessage, RoomDTO room) {
         room.getRoomMembers()
-            .forEach(user -> this.sendMessageToUser("/chat/user/" + user.getId(), chatMessage));
+            .forEach(user -> this.sendMessageToUser("/chat/user/" + user.getMember().getId(), chatMessage));
     }
 
     private void sendTypingToUsersInRoom(ChatMessageDTO chatMessage, RoomDTO room) {
         room.getRoomMembers()
-            .forEach(user -> this.sendMessageToUser("/chat/user/" + user.getId() + "/typing", chatMessage));
+            .forEach(user -> this.sendMessageToUser("/chat/user/" + user.getMember().getId() + "/typing", chatMessage));
     }
 
     private void sendMessageToUser(String destination, ChatMessageDTO chatMessage) {
