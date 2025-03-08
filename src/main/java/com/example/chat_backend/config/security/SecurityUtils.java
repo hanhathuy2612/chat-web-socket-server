@@ -4,6 +4,7 @@ import java.util.Arrays;
 import java.util.Optional;
 import java.util.stream.Stream;
 
+import com.example.chat_backend.exception.AuthenticationException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContext;
@@ -31,6 +32,12 @@ public final class SecurityUtils {
     public static Optional<String> getCurrentUserLogin() {
         SecurityContext securityContext = SecurityContextHolder.getContext();
         return Optional.ofNullable(extractPrincipal(securityContext.getAuthentication()));
+    }
+
+    public static String getCurrentUserLoginOrThrow() {
+        return getCurrentUserLogin().orElseThrow(
+            AuthenticationException::new
+        );
     }
 
     private static String extractPrincipal(Authentication authentication) {

@@ -3,7 +3,7 @@ package com.example.chat_backend.service.impl;
 import com.example.chat_backend.domain.ChatMessage;
 import com.example.chat_backend.repository.ChatMessageRepository;
 import com.example.chat_backend.service.ChatMessageService;
-import com.example.chat_backend.service.dto.ChatMessageDTO;
+import com.example.chat_backend.service.dto.message.ChatMessageDTO;
 import com.example.chat_backend.util.ConvertUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;

@@ -1,10 +1,9 @@
-package com.example.chat_backend.service.dto.room;
+package com.example.chat_backend.controller.rest.dto.request;
 
 import java.util.List;
 
 import com.example.chat_backend.service.dto.user.AppUserDTO;
 
-public record CreateRoomCommand(
-        String name,
+public record CreateRoomRequest(
         List<AppUserDTO> members) {
 }

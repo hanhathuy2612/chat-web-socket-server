@@ -1,7 +1,7 @@
 package com.example.chat_backend.domain;
 
 import com.example.chat_backend.domain.enumerate.MessageType;
-import com.example.chat_backend.service.dto.ChatMessageDTO;
+import com.example.chat_backend.service.dto.message.ChatMessageDTO;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

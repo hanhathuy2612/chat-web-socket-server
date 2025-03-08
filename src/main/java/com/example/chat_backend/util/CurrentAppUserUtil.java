@@ -3,7 +3,7 @@ package com.example.chat_backend.util;
 import com.example.chat_backend.config.security.SecurityUtils;
 import com.example.chat_backend.domain.AppUser;
 import com.example.chat_backend.repository.AppUserRepository;
-import com.example.chat_backend.service.dto.AppUserDTO;
+import com.example.chat_backend.service.dto.user.AppUserDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

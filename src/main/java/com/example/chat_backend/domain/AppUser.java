@@ -1,7 +1,7 @@
 package com.example.chat_backend.domain;
 
 import com.example.chat_backend.config.Constants;
-import com.example.chat_backend.service.dto.AppUserDTO;
+import com.example.chat_backend.service.dto.user.AppUserDTO;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
@@ -86,30 +86,21 @@ public class AppUser extends AbstractAuditingEntity<UUID> {
     @Builder.Default
     @ManyToMany
     @JoinTable(
-            name = "app_user_authority",
-            joinColumns = {
-                @JoinColumn(name = "user_id", referencedColumnName = "id")},
-            inverseJoinColumns = {
-                @JoinColumn(name = "authority_name", referencedColumnName = "name")}
+        name = "app_user_authority",
+        joinColumns = {
+            @JoinColumn(name = "user_id", referencedColumnName = "id")},
+        inverseJoinColumns = {
+            @JoinColumn(name = "authority_name", referencedColumnName = "name")}
     )
     private Set<Authority> authorities = new HashSet<>();
 
     @Builder.Default
-    @ManyToMany(mappedBy = "appUsers")
-    private Set<Room> rooms = new HashSet<>();
+    @OneToMany(mappedBy = "member")
+    private Set<RoomMember> roomMembers = new HashSet<>();
 
     @Builder.Default
-    @ManyToMany
-    @JoinTable(
-            name = "user_contacts",
-            joinColumns = @JoinColumn(name = "user_id"),
-            inverseJoinColumns = @JoinColumn(name = "contact_id")
-    )
-    private Set<AppUser> contacts = new HashSet<>();
-
-    @Builder.Default
-    @ManyToMany(mappedBy = "contacts")
-    private Set<AppUser> contactOf = new HashSet<>();
+    @OneToMany(mappedBy = "user")
+    private Set<UserContact> contacts = new HashSet<>();
 
     public AppUser(AppUserDTO dto) {
         this.id = dto.getId();
@@ -118,20 +109,5 @@ public class AppUser extends AbstractAuditingEntity<UUID> {
         this.firstName = dto.getFirstName();
         this.lastName = dto.getLastName();
         this.activated = dto.isActivated();
-    }
-
-    public void addContact(AppUser contact) {
-        if (this.equals(contact)) {
-            throw new IllegalArgumentException("User cannot add themselves as contact");
-        }
-        this.contacts.add(contact);
-    }
-
-    public void removeContact(AppUser contact) {
-        this.contacts.remove(contact);
-    }
-
-    public boolean hasContact(AppUser contact) {
-        return this.contacts.contains(contact);
     }
 }

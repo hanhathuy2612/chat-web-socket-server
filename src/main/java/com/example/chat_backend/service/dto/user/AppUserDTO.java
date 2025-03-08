@@ -1,0 +1,57 @@
+package com.example.chat_backend.service.dto.user;
+
+import com.example.chat_backend.domain.AppUser;
+import com.example.chat_backend.service.dto.AuditDTO;
+import com.example.chat_backend.service.dto.room.RoomDTO;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.experimental.SuperBuilder;
+
+import java.time.Instant;
+import java.util.*;
+
+@Getter
+@Setter
+@SuperBuilder
+@NoArgsConstructor
+@JsonInclude(JsonInclude.Include.NON_NULL)
+public class AppUserDTO extends AuditDTO {
+    private UUID id;
+
+    private String login;
+
+    private String password;
+
+    private String firstName;
+
+    private String lastName;
+
+    private String email;
+
+    @Builder.Default
+    private boolean activated = false;
+
+    private String activationKey;
+
+    private String resetKey;
+
+    @Builder.Default
+    private Instant resetDate = null;
+
+    @Builder.Default
+    private List<AuthorityDTO> authorities = new ArrayList<>();
+
+    @Builder.Default
+    private Set<RoomDTO> rooms = new HashSet<>();
+
+    public AppUserDTO(AppUser sender) {
+        this.id = sender.getId();
+        this.login = sender.getLogin();
+        this.email = sender.getEmail();
+        this.firstName = sender.getFirstName();
+        this.lastName = sender.getLastName();
+    }
+}

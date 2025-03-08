@@ -1,10 +1,7 @@
 package com.example.chat_backend.service.dto.room;
 
-import com.example.chat_backend.domain.ChatMessage;
-import com.example.chat_backend.domain.Room;
-import com.example.chat_backend.service.dto.AppUserDTO;
 import com.example.chat_backend.service.dto.AuditDTO;
-import com.example.chat_backend.service.dto.ChatMessageDTO;
+import com.example.chat_backend.service.dto.message.ChatMessageDTO;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Builder;
 import lombok.Getter;
@@ -13,7 +10,6 @@ import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
 import java.util.UUID;
 
@@ -32,22 +28,8 @@ public class RoomDTO extends AuditDTO {
     private ChatMessageDTO lastMessage;
 
     @Builder.Default
-    @JsonIgnoreProperties(value = {"rooms"}, allowSetters = true)
-    private List<AppUserDTO> appUsers = new ArrayList<>();
-
-    public RoomDTO(Room room) {
-        if (room == null) {
-            return;
-        }
-        this.id = room.getId();
-        this.name = room.getName();
-        this.description = room.getDescription();
-        this.appUsers = room.getAppUsers().stream().map(AppUserDTO::new).toList();
-        this.lastMessage = room.getChatMessages().stream()
-                .max(Comparator.comparing(ChatMessage::getLastModifiedDate))
-                .map(ChatMessageDTO::new)
-                .orElse(null);
-    }
+    @JsonIgnoreProperties(value = {"room"}, allowSetters = true)
+    private List<RoomMemberDTO> roomMembers = new ArrayList<>();
 
     public RoomDTO(UUID roomId) {
         this.id = roomId;

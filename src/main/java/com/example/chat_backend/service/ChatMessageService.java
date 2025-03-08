@@ -1,6 +1,6 @@
 package com.example.chat_backend.service;
 
-import com.example.chat_backend.service.dto.ChatMessageDTO;
+import com.example.chat_backend.service.dto.message.ChatMessageDTO;
 import org.springframework.data.domain.Pageable;
 
 import java.util.List;
