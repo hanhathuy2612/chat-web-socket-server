@@ -1,0 +1,41 @@
+version: "3.8"
+
+services:
+  kurento:
+    image: kurento/kurento-media-server
+    container_name: kms
+    restart: unless-stopped
+    ports:
+      - "8888:8888"
+      - "5000-5050:5000-5050/udp"
+    environment:
+      - KMS_MIN_PORT=5000
+      - KMS_MAX_PORT=5050
+    networks:
+      - webrtc-net
+
+  coturn:
+    image: instrumentisto/coturn
+    container_name: coturn
+    restart: unless-stopped
+    ports:
+      - "3478:3478/udp"
+      - "3478:3478/tcp"
+      - "5349:5349/tcp"
+      - "5349:5349/udp"
+      - "49160-49200:49160-49200/udp"
+    command: >
+      --log-file=stdout
+      --fingerprint
+      --lt-cred-mech
+      --realm=kurento.org
+      --user=username:password
+      --external-ip=192.168.1.68
+      --min-port=49160
+      --max-port=49200
+    networks:
+      - webrtc-net
+
+networks:
+  webrtc-net:
+    driver: bridge

@@ -42,5 +42,14 @@ app:
         base64-secret: YWM2YTk3OTA2MGZmNzRhMjc0OGNhYTA5ZGJkZGIyNjU2ZTVlOTQyNWI3YTljNzlkZDM4ZjAzMWU2Yjc3ZjYwYWM3NjNmNzFkMDFjMGZhMGUxZDY2ZTQ3NTcwNzZlOGMxYzRhZDlkN2YzZjY0MDE0OGFlZWU3OGU0M2I2ZWI3NzU=
         token-validity-in-seconds: 86400
         token-validity-in-seconds-for-remember-me: 2592000
+        refresh-token-validity-in-seconds: 2592000
     cors:
       origins: http://localhost:8081,http://localhost:3000
+  kurento:
+    url: ws://localhost:8888/kurento
+    webrtc:
+      stun: stun:localhost:3478
+      turn:
+        url: turn:localhost:3478
+        username: username
+        password: password

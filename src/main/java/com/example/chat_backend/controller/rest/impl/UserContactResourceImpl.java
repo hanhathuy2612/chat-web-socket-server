@@ -1,6 +1,6 @@
 package com.example.chat_backend.controller.rest.impl;
 
-import com.example.chat_backend.controller.rest.UserContactResource;
+import com.example.chat_backend.controller.rest.IUserContactResource;
 import com.example.chat_backend.controller.rest.dto.request.SearchContactRequest;
 import com.example.chat_backend.controller.rest.dto.response.SearchContactResponse;
 import com.example.chat_backend.service.UserContactService;
@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 @Slf4j
 @RestController
 @RequiredArgsConstructor
-public class UserContactResourceImpl implements UserContactResource {
+public class UserContactResourceImpl implements IUserContactResource {
     private final UserContactService userContactService;
 
     @Override

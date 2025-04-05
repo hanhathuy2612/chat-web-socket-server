@@ -1,7 +1,6 @@
 package com.example.chat_backend.domain;
 
 import com.example.chat_backend.service.dto.room.RoomDTO;
-import com.example.chat_backend.service.dto.user.AppUserDTO;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.SuperBuilder;

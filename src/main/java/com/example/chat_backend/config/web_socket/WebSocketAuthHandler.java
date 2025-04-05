@@ -1,13 +1,16 @@
 package com.example.chat_backend.config.web_socket;
 
+import java.util.Map;
+
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.web.socket.WebSocketSession;
 import org.springframework.web.socket.handler.TextWebSocketHandler;
 
-import java.util.Map;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @Component
 public class WebSocketAuthHandler extends TextWebSocketHandler {
     @Override
@@ -20,8 +23,7 @@ public class WebSocketAuthHandler extends TextWebSocketHandler {
             return;
         }
 
-        // Lưu authentication vào SecurityContextHolder
         SecurityContextHolder.getContext().setAuthentication(auth);
-        System.out.println("✅ WebSocket Connected: " + auth.getName());
+        log.info("✅ WebSocket Connected: " + auth.getName());
     }
 }

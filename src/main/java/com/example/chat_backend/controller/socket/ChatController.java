@@ -57,7 +57,7 @@ public class ChatController {
     }
 
     @MessageMapping("/admin/send")
-    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')") // TODO: This function @PreAuthorize("hasAuthority('ROLE_ADMIN')") is currently not available.
     public void sendToAdmins(@Payload String message, Principal principal) {
         System.out.println("Send message to admins");
     }

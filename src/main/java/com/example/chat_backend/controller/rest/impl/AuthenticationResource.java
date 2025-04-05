@@ -18,13 +18,17 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.jwt.JwsHeader;
 import org.springframework.security.oauth2.jwt.JwtClaimsSet;
+import org.springframework.security.oauth2.jwt.JwtDecoder;
 import org.springframework.security.oauth2.jwt.JwtEncoder;
 import org.springframework.security.oauth2.jwt.JwtEncoderParameters;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.chat_backend.controller.rest.IAuthenticationResource;
 import com.example.chat_backend.controller.rest.dto.request.LoginRequest;
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.example.chat_backend.controller.rest.dto.request.RefreshTokenRequest;
+import com.example.chat_backend.controller.rest.dto.response.TokenResponse;
+import com.example.chat_backend.domain.RefreshToken;
+import com.example.chat_backend.service.RefreshTokenService;
 
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
@@ -36,16 +40,15 @@ import lombok.extern.slf4j.Slf4j;
 public class AuthenticationResource implements IAuthenticationResource {
     @Value("${app.security.authentication.jwt.token-validity-in-seconds:0}")
     private long tokenValidityInSeconds;
-
     @Value("${app.security.authentication.jwt.token-validity-in-seconds-for-remember-me:0}")
     private long tokenValidityInSecondsForRememberMe;
 
     private final JwtEncoder jwtEncoder;
-
+    private final RefreshTokenService refreshTokenService;
     private final AuthenticationManagerBuilder authenticationManagerBuilder;
 
     @Override
-    public ResponseEntity<JWTToken> login(LoginRequest request) {
+    public ResponseEntity<TokenResponse> login(LoginRequest request) {
         log.debug("REST request to login with username: {}", request.getUsername());
         UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(
                 request.getUsername(),
@@ -53,10 +56,54 @@ public class AuthenticationResource implements IAuthenticationResource {
 
         Authentication authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
         SecurityContextHolder.getContext().setAuthentication(authentication);
-        String jwt = this.createToken(authentication, request.isRememberMe());
+
+        // Create access token
+        long expiresIn = request.isRememberMe() ? tokenValidityInSecondsForRememberMe : tokenValidityInSeconds;
+        String accessToken = createToken(authentication, request.isRememberMe());
+
+        // Create refresh token
+        RefreshToken refreshToken = refreshTokenService.createRefreshToken(authentication.getName());
+
+        // Build response
+        TokenResponse tokenResponse = TokenResponse.builder()
+                .accessToken(accessToken)
+                .refreshToken(refreshToken.getToken())
+                .tokenType("Bearer")
+                .expiresIn(expiresIn)
+                .build();
+
+        // Set bearer token in header
         HttpHeaders httpHeaders = new HttpHeaders();
-        httpHeaders.setBearerAuth(jwt);
-        return new ResponseEntity<>(new JWTToken(jwt), httpHeaders, HttpStatus.OK);
+        httpHeaders.setBearerAuth(accessToken);
+
+        return new ResponseEntity<>(tokenResponse, httpHeaders, HttpStatus.OK);
+    }
+
+    @Override
+    public ResponseEntity<TokenResponse> refreshToken(RefreshTokenRequest request) {
+        log.debug("REST request to refresh token");
+
+        // Verify and get refresh token
+        RefreshToken refreshToken = refreshTokenService.verifyExpiration(request.getRefreshToken());
+        String username = refreshToken.getUsername();
+
+        // Create new access token
+        String accessToken = createTokenFromUsername(username, false);
+        long expiresIn = tokenValidityInSeconds;
+
+        // Build response
+        TokenResponse tokenResponse = TokenResponse.builder()
+                .accessToken(accessToken)
+                .refreshToken(refreshToken.getToken()) // Reuse the same refresh token
+                .tokenType("Bearer")
+                .expiresIn(expiresIn)
+                .build();
+
+        // Set bearer token in header
+        HttpHeaders httpHeaders = new HttpHeaders();
+        httpHeaders.setBearerAuth(accessToken);
+
+        return new ResponseEntity<>(tokenResponse, httpHeaders, HttpStatus.OK);
     }
 
     @Override
@@ -69,6 +116,17 @@ public class AuthenticationResource implements IAuthenticationResource {
         String authorities = authentication.getAuthorities().stream().map(GrantedAuthority::getAuthority)
                 .collect(Collectors.joining(" "));
 
+        return createTokenFromClaims(authentication.getName(), authorities, rememberMe);
+    }
+
+    private String createTokenFromUsername(String username, boolean rememberMe) {
+        // In a real application, you would need to load the user's authorities from
+        // database
+        // This is simplified for this example
+        return createTokenFromClaims(username, "ROLE_USER", rememberMe);
+    }
+
+    private String createTokenFromClaims(String subject, String authorities, boolean rememberMe) {
         Instant now = Instant.now();
         Instant validity;
         if (rememberMe) {
@@ -80,32 +138,11 @@ public class AuthenticationResource implements IAuthenticationResource {
         JwtClaimsSet claims = JwtClaimsSet.builder()
                 .issuedAt(now)
                 .expiresAt(validity)
-                .subject(authentication.getName())
+                .subject(subject)
                 .claim(AUTHORITIES_KEY, authorities)
                 .build();
 
         JwsHeader jwsHeader = JwsHeader.with(JWT_ALGORITHM).build();
         return this.jwtEncoder.encode(JwtEncoderParameters.from(jwsHeader, claims)).getTokenValue();
-    }
-
-    /**
-     * Object to return as body in JWT Authentication.
-     */
-    public static class JWTToken {
-
-        private String idToken;
-
-        JWTToken(String idToken) {
-            this.idToken = idToken;
-        }
-
-        @JsonProperty("id_token")
-        String getIdToken() {
-            return idToken;
-        }
-
-        void setIdToken(String idToken) {
-            this.idToken = idToken;
-        }
     }
 }

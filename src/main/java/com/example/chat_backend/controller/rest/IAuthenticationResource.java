@@ -7,7 +7,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.example.chat_backend.controller.rest.dto.request.LoginRequest;
-import com.example.chat_backend.controller.rest.impl.AuthenticationResource.JWTToken;
+import com.example.chat_backend.controller.rest.dto.request.RefreshTokenRequest;
+import com.example.chat_backend.controller.rest.dto.response.TokenResponse;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
@@ -21,7 +22,16 @@ public interface IAuthenticationResource {
      * @return the login if the user is authenticated.
      */
     @PostMapping("/login")
-    ResponseEntity<JWTToken> login(@Valid @RequestBody LoginRequest request);
+    ResponseEntity<TokenResponse> login(@Valid @RequestBody LoginRequest request);
+
+    /**
+     * {@code POST /authenticate/refresh} : refresh authentication token.
+     * 
+     * @param request the refresh token request.
+     * @return the new JWT token.
+     */
+    @PostMapping("/refresh")
+    ResponseEntity<TokenResponse> refreshToken(@Valid @RequestBody RefreshTokenRequest request);
 
     /**
      * {@code GET /authenticate} : check if the user is authenticated, and return
