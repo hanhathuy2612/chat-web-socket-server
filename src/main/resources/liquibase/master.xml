@@ -8,4 +8,5 @@
     <include file="liquibase/changelog/20250119165236_init.mysql.sql"/>
     <include file="liquibase/changelog/20250308134205_add_user_contact.mysql.sql"/>
     <include file="liquibase/changelog/20250308145236_add_room_members.mysql.sql"/>
+    <include file="liquibase/changelog/20250406113618_refresh_tokens.mysql.sql"/>
 </databaseChangeLog>

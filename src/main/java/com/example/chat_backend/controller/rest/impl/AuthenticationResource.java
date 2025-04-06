@@ -64,13 +64,13 @@ public class AuthenticationResource implements IAuthenticationResource {
         // Create refresh token
         RefreshToken refreshToken = refreshTokenService.createRefreshToken(authentication.getName());
 
-        // Build response
-        TokenResponse tokenResponse = TokenResponse.builder()
-                .accessToken(accessToken)
-                .refreshToken(refreshToken.getToken())
-                .tokenType("Bearer")
-                .expiresIn(expiresIn)
-                .build();
+        // Token response
+        TokenResponse tokenResponse = new TokenResponse(
+            accessToken,
+            refreshToken.getToken(),
+            "Bearer",
+            expiresIn
+        );
 
         // Set bearer token in header
         HttpHeaders httpHeaders = new HttpHeaders();
@@ -92,12 +92,12 @@ public class AuthenticationResource implements IAuthenticationResource {
         long expiresIn = tokenValidityInSeconds;
 
         // Build response
-        TokenResponse tokenResponse = TokenResponse.builder()
-                .accessToken(accessToken)
-                .refreshToken(refreshToken.getToken()) // Reuse the same refresh token
-                .tokenType("Bearer")
-                .expiresIn(expiresIn)
-                .build();
+        TokenResponse tokenResponse = new TokenResponse(
+            accessToken,
+            refreshToken.getToken(),
+            "Bearer",
+            expiresIn
+        );
 
         // Set bearer token in header
         HttpHeaders httpHeaders = new HttpHeaders();
